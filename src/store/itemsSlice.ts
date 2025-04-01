@@ -1,26 +1,30 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Явно экспортируем интерфейсы
 export interface Item {
-  id: number;
+  id: string;
   text: string;
   price: number;
 }
 
-export interface ItemsState {
+interface ItemsState {
   list: Item[];
 }
 
 const initialState: ItemsState = {
-  list: [],
+  list: [
+    { id: '1', text: 'Пример товара', price: 100 }
+  ],
 };
 
 const itemsSlice = createSlice({
-  name: "items",
+  name: 'items',
   initialState,
   reducers: {
     addItem: (state, action: PayloadAction<Omit<Item, 'id'>>) => {
-      const newItem = { id: Date.now(), ...action.payload };
+      const newItem = {
+        id: Date.now().toString(),
+        ...action.payload
+      };
       state.list.push(newItem);
     },
     editItem: (state, action: PayloadAction<Item>) => {
@@ -29,7 +33,7 @@ const itemsSlice = createSlice({
         state.list[index] = action.payload;
       }
     },
-    deleteItem: (state, action: PayloadAction<number>) => {
+    deleteItem: (state, action: PayloadAction<string>) => {
       state.list = state.list.filter(item => item.id !== action.payload);
     },
   },

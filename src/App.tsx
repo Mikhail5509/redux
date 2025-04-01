@@ -1,13 +1,15 @@
-import EditableList from "./components/EditableList";
-import "bootstrap/dist/css/bootstrap.min.css";
+// src/App.tsx
+import { Provider } from 'react-redux';
+import { store } from './store';
+import EditableList from './components/EditableList';
 
-const App = () => {
-  return (
-    <div className="container mt-4">
-      <h1>Редактируемый список</h1>
+const App = () => (
+  <Provider store={store}>
+    <div className="container">
+      <h1>Redux: Редактируемый список</h1>
       <EditableList />
     </div>
-  );
-};
+  </Provider>
+);
 
 export default App;

@@ -3,63 +3,63 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
 import { addItem, editItem, deleteItem } from "../store/itemsSlice";
 
-interface Item {
-  id: number;
-  text: string;
-  price: number;
-}
-
 const EditableList = () => {
+  // Получаем данные из Redux store
   const items = useSelector((state: RootState) => state.items.list);
   const dispatch = useDispatch();
-  
-  const [editingItem, setEditingItem] = useState<Item | null>(null);
+
+  // Локальное состояние для формы
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [text, setText] = useState("");
   const [price, setPrice] = useState("");
   const [filter, setFilter] = useState("");
 
+  // Обработчик сохранения
   const handleSave = () => {
     if (!text || !price) return;
-    
-    if (editingItem) {
-      dispatch(editItem({ 
-        id: editingItem.id, 
-        text, 
-        price: Number(price) 
-      }));
-      setEditingItem(null);
+
+    if (editingId) {
+      dispatch(editItem({ id: editingId, text, price: Number(price) }));
     } else {
-      dispatch(addItem({ 
-        text, 
-        price: Number(price) 
-      }));
+      dispatch(addItem({ text, price: Number(price) }));
     }
+
+    setEditingId(null);
     setText("");
     setPrice("");
   };
 
-  const handleEdit = (item: Item) => {
-    setEditingItem(item);
-    setText(item.text);
-    setPrice(item.price.toString());
+  // Обработчик редактирования
+  const handleEdit = (id: string) => {
+    const item = items.find(item => item.id === id);
+    if (item) {
+      setEditingId(item.id);
+      setText(item.text);
+      setPrice(item.price.toString());
+    }
   };
 
-  const handleDelete = (id: number) => {
+  // Обработчик удаления
+  const handleDelete = (id: string) => {
     dispatch(deleteItem(id));
   };
 
-  const filteredItems = items.filter((item: Item) => 
+  // Фильтрация элементов
+  const filteredItems = items.filter(item =>
     item.text.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
     <div>
+      {/* Поле фильтрации */}
       <input
         type="text"
         placeholder="Фильтр"
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
       />
+
+      {/* Форма ввода */}
       <input
         type="text"
         placeholder="Название"
@@ -73,14 +73,20 @@ const EditableList = () => {
         onChange={(e) => setPrice(e.target.value)}
       />
       <button onClick={handleSave}>
-        {editingItem ? "Сохранить" : "Добавить"}
+        {editingId ? "Сохранить" : "Добавить"}
       </button>
+
+      {/* Список элементов */}
       <ul>
-        {filteredItems.map((item: Item) => (
+        {filteredItems.map(item => (
           <li key={item.id}>
-            {item.text} {item.price}₽
-            <button onClick={() => handleEdit(item)}>✏️</button>
-            <button onClick={() => handleDelete(item.id)}>❌</button>
+            <span>
+              {item.text} {item.price}₽
+            </span>
+            <div>
+              <button onClick={() => handleEdit(item.id)}>✏️</button>
+              <button onClick={() => handleDelete(item.id)}>❌</button>
+            </div>
           </li>
         ))}
       </ul>

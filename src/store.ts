@@ -1,5 +1,6 @@
-import { configureStore } from "@reduxjs/toolkit";
-import itemsReducer, { ItemsState } from "./store/itemsSlice"; // Явно импортируем ItemsState
+// src/store.ts
+import { configureStore } from '@reduxjs/toolkit';
+import itemsReducer from './store/itemsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -7,6 +8,5 @@ export const store = configureStore({
   },
 });
 
-// Экспортируем типы после создания store
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
