@@ -1,4 +1,4 @@
-import EditableList from "./EditableList.js";
+import EditableList from "./components/EditableList";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
