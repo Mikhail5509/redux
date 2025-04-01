@@ -1,5 +1,4 @@
-import React from "react";
-import EditableList from "./EditableList";
+import EditableList from "./EditableList.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
